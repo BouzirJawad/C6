@@ -35,6 +35,7 @@ void createPerson(person *p) // function to create new persons
     printf("-------------------------\n");
 }
 
+
 void display(person p){ //function to display the list of members 
         
         printf("Name : %s\n", p.name);
@@ -45,7 +46,7 @@ void display(person p){ //function to display the list of members
         printf("--------------------------\n");
 }
 
-void displayForDelete(person p){ //function to display members names only for deleting
+void tempDisplay(person p){ //function to display members names only for deleting
         printf("Name : %s\n", p.name);
         printf("--------------------------\n");
 }
@@ -116,7 +117,7 @@ void deletePerson(person persons[], int *person_count, int index){// function to
                     for (int i = 0; i < person_count; i++)//displaying all memebers to choose who to delete
                     {
                         printf("Person %d :\n", i+1);
-                        displayForDelete(persons[i]);
+                        tempDisplay(persons[i]);
                     }
 
                         printf("Enter a person number to delete ... (1 to %d)\n", person_count);
@@ -147,7 +148,7 @@ void deletePerson(person persons[], int *person_count, int index){// function to
                     for (int i = 0; i < person_count; i++)//displaying members to choose who to modify
                     {
                         printf("Person %d :\n", i+1);
-                        displayForDelete(persons[i]);
+                        tempDisplay(persons[i]);
                     }
 
                         printf("Which person you want to modify ? ... (1 to %d)\n", person_count);
