@@ -284,6 +284,7 @@ void displayAll()
 int main()
 {   
     int menuChoice; //to take the choice of the user from the menu
+    int periorityChoice; //number to choose which priority to filter with
     do
     {
         printf("--------------------Menu--------------------\n");
@@ -291,6 +292,7 @@ int main()
         printf("2. Modify a task\n");
         printf("3. Delete a task\n");
         printf("4. Display tasks\n");
+        printf("5. Filter tasks based on priority\n");
         printf("0. Exit\n");
         scanf("%d", &menuChoice);
         printf("--------------------------------------------\n");
@@ -315,7 +317,58 @@ int main()
             break;
 
             case 5 :
-                
+                if (tasksCounter == 0)
+                {
+                    printf("There is no task to filter. \n");
+                    printf("--------------------------------------------\n");
+                }
+                else
+                {
+                    int continueFiltering = 1;
+                    do
+                    { 
+                        printf("Enter the priority you want to filter with ?\n");
+                        printf(" 1. Low\n 2. Medium\n 3. High \n 4. Very High\n 0. To go back\n");
+                        scanf("%d", &periorityChoice);
+                        switch (periorityChoice)
+                        {
+                            case 0 :
+                                continueFiltering = 0;
+                            break;
+                            
+                            default:
+                                switch (periorityChoice)
+                                {
+                                    case 1 : printf("Tasks with priority : Low\n"); break;
+                                    case 2 : printf("Tasks with priority : Medium\n"); break;
+                                    case 3 : printf("Tasks with priority : High\n"); break;
+                                    case 4 : printf("Tasks with priority : Very high\n"); break;
+                                    default : 
+                                        printf("--------------------------------------------\n");
+                                        printf("Invalid choice. Please select a valid option.\n");
+                                        printf("--------------------------------------------\n");
+                                    continue;
+                                }
+
+                                int found = 0;//to track if any tasks match the chosen priority
+
+                                for (int i = 0; i < tasksCounter; i++)
+                                {
+                                    if (tasksListe[i].priority == periorityChoice)
+                                    {
+                                        display(tasksListe[i]);
+                                        found = 1; //set to 1 if a match found
+                                    }
+                                }
+                                if (found == 0)
+                                {
+                                    printf("No match found !\n");
+                                    printf("--------------------------------------------\n");
+                                }
+                            break;
+                        }
+                    } while (continueFiltering);
+                }
             break;
 
             case 0 :
