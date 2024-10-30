@@ -1,6 +1,5 @@
 #include <stdio.h>
-#include <string.h>
-
+#include <stdbool.h>
 #define max_tasks 100 /// set max tasks to 100
 
 typedef struct // struct to store the date
@@ -16,10 +15,28 @@ typedef struct //struct to store all information
     char description[100];
     taskDate date;
     int priority;
+    int status;
 }task;
 
 task tasksListe[max_tasks];//aray to store 100 task
 int tasksCounter = 0;//tracking total tasks
+
+bool validDate(int day, int month, int year)//to check is the date is valid 
+{                                           //and forces user to put a valid one
+    if (year<0) return false; //no negative year
+    if (month<0 || month>12) return false; //month between 1 and 12
+    //set days of months
+    int monthDays [] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    if (month == 2)
+    {                       //leap year is div by 4 and not 100 / or by 400 only
+        if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
+        {
+            monthDays[2] = 29;//leap year
+        }
+    }
+    return (day > 0 && day <= monthDays[month]);//validating date
+}
 
 void addTask()//to add a task
 {   
@@ -48,9 +65,18 @@ void addTask()//to add a task
             printf("Date (dd/mm/yy) :");
             scanf("%d/%d/%d", &tasksListe[i].date.day, &tasksListe[i].date.month, &tasksListe[i].date.year);
 
+            //making sure the date is valid
+            while (!validDate(tasksListe[i].date.day, tasksListe[i].date.month, tasksListe[i].date.year))
+            {
+                printf("--------------------------------------------\n");
+                printf("Invalid date. Please enter a valid date (dd/mm/yyyy): \nDate :");
+                scanf("%d/%d/%d", &tasksListe[i].date.day, &tasksListe[i].date.month, &tasksListe[i].date.year);
+            }
+            
+
             do //dowhile loop force the user to take a valid priority
             {
-                printf("Priority:\n 1. Low\n 2. Medium\n 3. High\n 4. Very High\n ");
+                printf("Priority :\n 1. Low\n 2. Medium\n 3. High\n 4. Very High\n ");
                 scanf("%d", &tasksListe[i].priority);
 
                 if (tasksListe[i].priority < 1 || tasksListe[i].priority > 4) 
@@ -60,6 +86,9 @@ void addTask()//to add a task
                     printf("--------------------------------------------\n");
                 }
             } while (tasksListe[i].priority < 1 || tasksListe[i].priority > 4);
+
+            //1. inpomplete / 2.complete
+            tasksListe[i].status = 1;
 
             printf("--------------------------------------------\n");
             printf("task number %d has been created successfully.\n", i+1);//confirming creation
@@ -94,12 +123,14 @@ void display(task t)//to display one task only
             printf("Priority : No priority\n");
         break;
     }
-    printf("--------------------------------------------\n");
-}
-
-void tempDisplay(task t)//used to display task title only in case deleting or modifying
-{
-    printf("Title : %s\n", t.title);
+    if (t.status == 1)
+    {
+        printf("Status : Incomplete.\n");
+    }
+    else
+    {
+        printf("Status : Complete.\n");
+    }
     printf("--------------------------------------------\n");
 }
 
@@ -117,10 +148,11 @@ void modifyTask()//to modify a task
     {
         do//dowhile loop to keep displaying tasks for modification
         {
-            for (int i = 0; i < tasksCounter; i++)//displaying tasks to modify
+            for (int i = 0; i < tasksCounter; i++)//displaying tasks titles to modify
             {
                 printf("task %d\n", i+1);
-                tempDisplay(tasksListe[i]);
+                printf("Title : %s\n", tasksListe[i].title);
+                printf("--------------------------------------------\n");
             }
             
             printf("Which task you want to modify ? ... (1 to %d)\n", tasksCounter);
@@ -144,11 +176,12 @@ void modifyTask()//to modify a task
                 {
                     display(tasksListe[modifyChoice-1]);
                     printf("What do you want to modify ?\n");
-                    printf("1. Title\n");
-                    printf("2. Description\n");
-                    printf("3. Date\n");
-                    printf("4. Priority\n");
-                    printf("0. To go back\n");
+                    printf("1. Title.\n");
+                    printf("2. Description.\n");
+                    printf("3. Date.\n");
+                    printf("4. Priority.\n");
+                    printf("5. Status.\n");
+                    printf("0. To go back.\n");
                     scanf("%d", &modifyindex);
                     printf("--------------------------------------------\n");
 
@@ -177,6 +210,20 @@ void modifyTask()//to modify a task
                             scanf("%d/%d/%d", &tasksListe[modifyChoice-1].date.day, 
                                             &tasksListe[modifyChoice-1].date.month,
                                             &tasksListe[modifyChoice-1].date.year);
+
+                            //making sure the new date is valid
+                            while (!validDate(tasksListe[modifyChoice-1].date.day, 
+                                            tasksListe[modifyChoice-1].date.month,
+                                            tasksListe[modifyChoice-1].date.year))
+                            {
+                                printf("--------------------------------------------\n");
+                                printf("Invalid date. Please enter a valid date (dd/mm/yyyy): \n");
+                                printf("Enter the new date :");
+                                scanf("%d/%d/%d", &tasksListe[modifyChoice-1].date.day, 
+                                                &tasksListe[modifyChoice-1].date.month,
+                                                &tasksListe[modifyChoice-1].date.year);
+                            }
+                            
                         break;
 
                         case 4://updating priority
@@ -203,6 +250,11 @@ void modifyTask()//to modify a task
                                 }
                             } while (tasksListe[modifyChoice-1].priority < 0 
                                 || tasksListe[modifyChoice-1].priority > 4);
+                        break;
+
+                        case 5 :
+                            //add status here later 
+
                         break;
 
                         default://error msg if user takes invalid choice
@@ -235,7 +287,8 @@ void deleteTask()//to delete a task
             for (int i = 0; i < tasksCounter; i++)//displaying tasks titles only for delete 
             {
                 printf("task %d :\n", i+1);
-                tempDisplay(tasksListe[i]);//hereeee
+                printf("Title : %s\n", tasksListe[i].title);
+                printf("--------------------------------------------\n");
             }
 
             printf("Enter a task number to delete ... (1 to %d)\n", tasksCounter);
@@ -443,7 +496,6 @@ int main()
             break;
 
             case 0 ://to exit the program
-                menuChoice = 0;
                 printf("Exiting...(see you next time :v )\n");
             break;
         
