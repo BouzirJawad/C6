@@ -43,7 +43,7 @@ void addTask()//to add a task
     int x;//number for how many tasks to create
 
     printf("How many tasks would you like to add ?\n");
-    printf("0. To go back\n");
+    printf("\t0. To go back\n");
     scanf("%d", &x);
     printf("--------------------------------------------\n");
 
@@ -55,7 +55,7 @@ void addTask()//to add a task
     {
         for (int i = tasksCounter; i < tasksCounter+x; i++)//loop for making new tasks
         {
-            printf("Task %d :\n", i+1);
+            printf("\tTask %d :\n", i+1);
             printf("Title : ");
             scanf(" %[^\n]s", tasksListe[i].title);
 
@@ -76,7 +76,7 @@ void addTask()//to add a task
 
             do //dowhile loop force the user to take a valid priority
             {
-                printf("Priority :\n 1. Low\n 2. Medium\n 3. High\n 4. Very High\n ");
+                printf("Priority :\n\t1. Low\n\t2. Medium\n\t3. High\n\t4. Very High\n ");
                 scanf("%d", &tasksListe[i].priority);
 
                 if (tasksListe[i].priority < 1 || tasksListe[i].priority > 4) 
@@ -123,14 +123,12 @@ void display(task t)//to display one task only
             printf("Priority : No priority\n");
         break;
     }
+
     if (t.status == 1)
-    {
-        printf("Status : Incomplete.\n");
-    }
+    {printf("Status : Incomplete.\n");}
     else
-    {
-        printf("Status : Complete.\n");
-    }
+    {printf("Status : Complete.\n");}
+    
     printf("--------------------------------------------\n");
 }
 
@@ -138,6 +136,7 @@ void modifyTask()//to modify a task
 {   
     int modifyChoice;// number to choose which task to modify
     int modifyindex;// number to choose what to modify in the task
+    int statusMark;// number for status changing menu
 
     if (tasksCounter == 0)//making sure there is tasks to modify
     {
@@ -148,15 +147,20 @@ void modifyTask()//to modify a task
     {
         do//dowhile loop to keep displaying tasks for modification
         {
-            for (int i = 0; i < tasksCounter; i++)//displaying tasks titles to modify
+            for (int i = 0; i < tasksCounter; i++)//displaying tasks titles and status to modify
             {
-                printf("task %d\n", i+1);
+                printf("\ttask %d :\n", i+1);
                 printf("Title : %s\n", tasksListe[i].title);
+
+                if (tasksListe[i].status == 1)
+                {printf("Status : Incomplete.\n");}
+                else{printf("Status : Complete.\n");}
+
                 printf("--------------------------------------------\n");
             }
             
             printf("Which task you want to modify ? ... (1 to %d)\n", tasksCounter);
-            printf("0. To go back\n");
+            printf("\t0. To go back\n");
             scanf("%d", &modifyChoice);//taking the number of task to modify
 
             if (modifyChoice == 0)
@@ -176,12 +180,12 @@ void modifyTask()//to modify a task
                 {
                     display(tasksListe[modifyChoice-1]);
                     printf("What do you want to modify ?\n");
-                    printf("1. Title.\n");
-                    printf("2. Description.\n");
-                    printf("3. Date.\n");
-                    printf("4. Priority.\n");
-                    printf("5. Status.\n");
-                    printf("0. To go back.\n");
+                    printf("\t1. Title.\n");
+                    printf("\t2. Description.\n");
+                    printf("\t3. Date.\n");
+                    printf("\t4. Priority.\n");
+                    printf("\t5. Status.\n");
+                    printf("\t0. To go back.\n");
                     scanf("%d", &modifyindex);
                     printf("--------------------------------------------\n");
 
@@ -191,43 +195,46 @@ void modifyTask()//to modify a task
                         continue;
 
                         case 1://updating title
-                            printf("Previous title : %s\n", tasksListe[modifyChoice-1].title);
+                            printf("Current title : %s\n", tasksListe[modifyChoice-1].title);
                             printf("Enter the new title ?\n");
                             scanf(" %[^\n]s", tasksListe[modifyChoice-1].title);
+                            printf("--------------------------------------------\n");
                         break;
 
                         case 2://updating description
-                            printf("Previous description : %s\n", tasksListe[modifyChoice-1].description);
+                            printf("Current description : %s\n", tasksListe[modifyChoice-1].description);
                             printf("Enter the new description ?\n");
                             scanf(" %[^\n]s", tasksListe[modifyChoice-1].description);
+                            printf("--------------------------------------------\n");
                         break;
 
                         case 3://updating date
-                            printf("Previous date : %d/%d/%d\n", tasksListe[modifyChoice-1].date.day, 
+                            printf("Current date : %d/%d/%d\n", tasksListe[modifyChoice-1].date.day, 
                                                                 tasksListe[modifyChoice-1].date.month,
                                                                 tasksListe[modifyChoice-1].date.year);
                             printf("Enter the new date ?\n");
                             scanf("%d/%d/%d", &tasksListe[modifyChoice-1].date.day, 
                                             &tasksListe[modifyChoice-1].date.month,
                                             &tasksListe[modifyChoice-1].date.year);
+                            printf("--------------------------------------------\n");
 
                             //making sure the new date is valid
                             while (!validDate(tasksListe[modifyChoice-1].date.day, 
                                             tasksListe[modifyChoice-1].date.month,
                                             tasksListe[modifyChoice-1].date.year))
                             {
-                                printf("--------------------------------------------\n");
                                 printf("Invalid date. Please enter a valid date (dd/mm/yyyy): \n");
                                 printf("Enter the new date :");
                                 scanf("%d/%d/%d", &tasksListe[modifyChoice-1].date.day, 
                                                 &tasksListe[modifyChoice-1].date.month,
                                                 &tasksListe[modifyChoice-1].date.year);
+                                printf("--------------------------------------------\n");
                             }
                             
                         break;
 
                         case 4://updating priority
-                            printf("Previous priority : ");//displaying previous priority
+                            printf("Current priority : ");//displaying current priority
                             switch (tasksListe[modifyChoice-1].priority)
                             {
                                 case 1 : printf("Low\n"); break;
@@ -239,12 +246,13 @@ void modifyTask()//to modify a task
                             do//dowhile loop to keep displaying priority options / forces the user to take valid option 
                             {
                                 printf("Enter the new priority ?\n");
-                                printf(" 1. Low\n 2. Medium\n 3. High\n 4. Very High\n ");
+                                printf("\t1. Low\n\t2. Medium\n\t3. High\n\t4. Very High\n ");
                                 scanf("%d", &tasksListe[modifyChoice-1].priority);
+                                printf("--------------------------------------------\n");
+
                                 if (tasksListe[modifyChoice-1].priority < 0 
                                     || tasksListe[modifyChoice-1].priority > 4)
                                 {
-                                    printf("--------------------------------------------\n");
                                     printf("Invalid priority. Please enter a number between 1 and 4.\n");
                                     printf("--------------------------------------------\n");
                                 }
@@ -253,8 +261,47 @@ void modifyTask()//to modify a task
                         break;
 
                         case 5 :
-                            //add status here later 
+                            do//dowhile loop to keep display incase taking invalid choice
+                            {
+                                printf("Current status : ");//displaying current status with option menu
+                                if (tasksListe[modifyChoice-1].status == 1)
+                                {
+                                    printf("Incomplete.\n");
+                                    printf("\t0. To go back\n");
+                                    printf("\t1. Mark as complete.\n");
+                                }
+                                else
+                                {
+                                    printf("Complete.\n");
+                                    printf("\t0. To go back\n");
+                                    printf("\t1. Mark as incomplete.\n");
+                                }
 
+                                scanf("%d", &statusMark);
+                                printf("--------------------------------------------\n");
+
+                                if (statusMark == 1 && statusMark != 0 && tasksListe[modifyChoice-1].status == 1)
+                                {
+                                    tasksListe[modifyChoice-1].status = 2;
+                                    printf("\tTask %d marked as completed\n", modifyChoice);
+                                    printf("--------------------------------------------\n");
+                                    break;//to exit the loop after changing the stratus with number 1
+                                }
+
+                                else if(statusMark == 1 && statusMark != 0)
+                                {
+                                    tasksListe[modifyChoice-1].status = 1;
+                                    printf("\tTask %d marked as incompleted\n", modifyChoice);
+                                    printf("--------------------------------------------\n");
+                                    break;//to exit the loop after changing the stratus with number 1
+                                }
+
+                                else
+                                {
+                                    printf("Invalid choice. Please select a valid option.\n");
+                                    printf("--------------------------------------------\n");
+                                }
+                            } while (statusMark);
                         break;
 
                         default://error msg if user takes invalid choice
@@ -286,13 +333,18 @@ void deleteTask()//to delete a task
         {
             for (int i = 0; i < tasksCounter; i++)//displaying tasks titles only for delete 
             {
-                printf("task %d :\n", i+1);
+                printf("\ttask %d :\n", i+1);
                 printf("Title : %s\n", tasksListe[i].title);
+
+                if (tasksListe[i].status == 1)
+                {printf("Status : Incomplete.\n");}
+                else{printf("Status : Complete.\n");}
+
                 printf("--------------------------------------------\n");
             }
 
             printf("Enter a task number to delete ... (1 to %d)\n", tasksCounter);
-            printf("0. To go back\n");
+            printf("\t0. To go back\n");
             scanf("%d", &deleteChoice);
 
             if (deleteChoice == 0)
@@ -302,6 +354,7 @@ void deleteTask()//to delete a task
 
             if (deleteChoice<0 || deleteChoice>tasksCounter)
             { //error message if user choose invalid task number
+                printf("--------------------------------------------\n");
                 printf("Invalid choice. Please select a valid option.\n");
                 printf("--------------------------------------------\n");
             }
@@ -332,7 +385,7 @@ void displayAll()//to display all tasks
     {
         for (int i = 0; i < tasksCounter; i++)//running a loop to display all tasks
         {
-            printf("task %d :\n", i+1);
+            printf("\ttask %d :\n", i+1);
             display(tasksListe[i]);
         }
     }
@@ -351,14 +404,16 @@ void priorityFilter()//to filter tasks based on priority
         do //dowhile loop to keep displaying filter option till the user take 0 (0 is an option to go back)
         { 
             printf("Enter the priority you want to filter with ?\n");
-            printf(" 1. Low\n 2. Medium\n 3. High \n 4. Very High\n 0. To go back\n");
+            printf("\t1. Low\n\t2. Medium\n\t3. High \n\t4. Very High\n\t0. To go back\n");
             scanf("%d", &periorityChoice);//taking the choice of filtering
+            printf("--------------------------------------------\n");
+
             switch (periorityChoice)//display msg showing to show what we filtering
             {
-                case 1 : printf("Tasks with priority : Low\n"); break;
-                case 2 : printf("Tasks with priority : Medium\n"); break;
-                case 3 : printf("Tasks with priority : High\n"); break;
-                case 4 : printf("Tasks with priority : Very high\n"); break;
+                case 1 : printf("\tTasks with priority : Low\n"); break;
+                case 2 : printf("\tTasks with priority : Medium\n"); break;
+                case 3 : printf("\tTasks with priority : High\n"); break;
+                case 4 : printf("\tTasks with priority : Very high\n"); break;
                 case 0 : continue;//skipping the rest of code and closing dowhile
                 default :
                     printf("--------------------------------------------\n");
@@ -379,10 +434,58 @@ void priorityFilter()//to filter tasks based on priority
             }
             if (found == 0)//if no match found display a msg saying it 
             {
-                printf("No match found !\n");
+                printf("\tNo match found !\n");
                 printf("--------------------------------------------\n");
             }
         } while (periorityChoice);
+    }
+}
+
+void statusFilter()//to filter tasks based on status
+{
+    int statusChoice;//number to choose which status to filter with
+    if(tasksCounter == 0)//making sure is tasks to filter
+    {
+        printf("There is no task to filter. \n");
+        printf("--------------------------------------------\n");
+    }
+    else//if so starting filtering
+    {
+        do //dowhile loop to keep displaying filter option till the user take 0 (0 is an option to go back)
+        { 
+            printf("Enter the status you want to filter with ?\n");
+            printf("\t1. Incomplete\n\t2. Complete\n\t0. To go back\n");
+            scanf("%d", &statusChoice);//taking the choice of filtering
+            printf("--------------------------------------------\n");
+
+            switch (statusChoice)//display msg showing to show what we filtering
+            {
+                case 1 : printf("\tIncompleted tasks :\n"); break;
+                case 2 : printf("\tCompleted tasks :\n"); break;
+                case 0 : continue;//skipping the rest of code and closing dowhile
+                default :
+                    printf("--------------------------------------------\n");
+                    printf("Invalid choice. Please select a valid option.\n");
+                    printf("--------------------------------------------\n");
+                continue;//skipping the code but starting dowhile over
+            }
+
+            int found = 0;//to track if any tasks match the chosen status
+
+            for (int i = 0; i < tasksCounter; i++)
+            {
+                if (tasksListe[i].status == statusChoice)//filtering tasks with the chosen status
+                {
+                    display(tasksListe[i]);
+                    found = 1; //set to 1 if a match found
+                }
+            }
+            if (found == 0)//if no match found display a msg saying it 
+            {
+                printf("\tNo match found !\n");
+                printf("--------------------------------------------\n");
+            }
+        } while (statusChoice);
     }
 }
 
@@ -450,18 +553,19 @@ void descending()
 
 int main()
 {   
-    int menuChoice; //to take the choice of the user from the menu
+    int menuChoice; //to take the choice of the user from the main menu
+    int filterChoice;//to take the choice of the user from the filter menu
     do
     {
-        printf("--------------------Menu--------------------\n");
-        printf("1. Add a new task.\n");
-        printf("2. Modify a task.\n");
-        printf("3. Delete a task.\n");
-        printf("4. Display tasks.\n");
-        printf("5. Filter tasks based on priority.\n");
-        printf("6. Sorting tasks by date(ascending).\n");
-        printf("7. Sorting tasks by date(descending).\n");
-        printf("0. Exit\n");
+        printf("-----------------Main menu------------------\n");
+        printf("\t1. Add a new task.\n");
+        printf("\t2. Modify a task.\n");
+        printf("\t3. Delete a task.\n");
+        printf("\t4. Display tasks.\n");
+        printf("\t5. Filter tasks.\n");
+        printf("\t6. Sorting tasks by date(ascending).\n");
+        printf("\t7. Sorting tasks by date(descending).\n");
+        printf("\t0. Exit\n");
         scanf("%d", &menuChoice);
         printf("--------------------------------------------\n");
 
@@ -483,8 +587,28 @@ int main()
                 displayAll();
             break;
 
-            case 5 ://filtering tasks based on priority 
-                priorityFilter();
+            case 5 ://filtering tasks based on priority or status
+                do
+                {
+                    printf("---------------Filter menu------------------\n");
+                    printf("\t1. Filter with periority.\n");
+                    printf("\t2. Filter with status.\n");
+                    printf("\t0. To go back.\n");
+                    scanf("%d", &filterChoice);
+
+                    if (filterChoice == 1)
+                    {priorityFilter();}
+
+                    else if(filterChoice == 2)
+                    {statusFilter();}
+
+                    else
+                    {
+                        printf("--------------------------------------------\n");
+                        printf("Invalid choice. Please select a valid option.\n");
+                        printf("--------------------------------------------\n");
+                    }
+                } while (filterChoice);
             break;
 
             case 6 ://sorting tasks based on ascending date
@@ -506,4 +630,3 @@ int main()
         }    
     } while (menuChoice);
 }
-
