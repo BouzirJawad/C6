@@ -12,7 +12,7 @@ typedef struct // struct to store the date
 typedef struct //struct to store all information
 {
     char title[100];
-    char description[100];
+    char description[200];
     taskDate date;
     int priority;
     int status;
@@ -23,7 +23,7 @@ int tasksCounter = 0;//tracking total tasks
 
 bool validDate(int day, int month, int year)//to check is the date is valid 
 {                                           //and forces user to put a valid one
-    if (year<0) return false; //no negative year
+    if (year<2024) return false; //no negative year or less than 2024
     if (month<0 || month>12) return false; //month between 1 and 12
     //set days of months
     int monthDays [] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -35,7 +35,7 @@ bool validDate(int day, int month, int year)//to check is the date is valid
             monthDays[2] = 29;//leap year
         }
     }
-    return (day > 0 && day <= monthDays[month]);//validating date
+    return (day > 0 && day <= monthDays[month]);//validating day date to 
 }
 
 void addTask()//to add a task
@@ -551,6 +551,47 @@ void descending()
     }
 }
 
+void saveFile() {
+    FILE *file = fopen("Tasks.txt", "w"); 
+
+    for (int i = 0; i < tasksCounter; i++) {
+        fprintf(file, "------------------Task %d :------------------\n", i+1);
+        fprintf(file, "Title : %s\n", tasksListe[i].title);
+        fprintf(file, "Description : %s\n", tasksListe[i].description);
+        fprintf(file, "Date : %02d/%02d/%02d\n", tasksListe[i].date.day, tasksListe[i].date.month, tasksListe[i].date.year);
+
+    switch (tasksListe[i].priority) 
+    {
+        case 1:
+            fprintf(file, "Priority : Low\n");
+            break;
+        case 2:
+            fprintf(file, "Priority : Medium\n");
+            break;
+        case 3:
+            fprintf(file, "Priority : High\n");
+            break;
+        case 4:
+            fprintf(file, "Priority : Very high\n");
+            break;
+        
+        default:
+            fprintf(file, "Priority : No priority\n");
+        break;
+    }
+
+    if (tasksListe[i].status == 1)
+    {fprintf(file, "Status : Incomplete.\n");}
+    else
+    {fprintf(file, "Status : Complete.\n");}
+    
+    fprintf(file, "--------------------------------------------\n");
+    }
+
+    fclose(file); 
+    printf("Tasks saved Successfully !!\n");
+}
+
 int main()
 {   
     int menuChoice; //to take the choice of the user from the main menu
@@ -567,6 +608,7 @@ int main()
         printf("\t4. Display tasks.\n");
         printf("\t5. Filter tasks.\n");
         printf("\t6. Sort tasks.\n");
+        printf("\t7. Save tasks.\n");
         printf("\t0. Exit\n");
         scanf("%d", &menuChoice);
         printf("--------------------------------------------\n");
@@ -641,6 +683,10 @@ int main()
                         printf("--------------------------------------------\n");
                     }
                 } while (statusChoice);
+            break;
+
+            case 7 :
+                    saveFile();
             break;
 
             case 0 ://to exit the program
