@@ -132,6 +132,23 @@ void display(task t)//to display one task only
     printf("--------------------------------------------\n");
 }
 
+void displayTask()//to display all tasks
+{
+    if (tasksCounter == 0)//validating that there is tasks to display
+    {
+        printf("There is no tasks to display\n");
+        printf("--------------------------------------------\n");
+    }
+    else
+    {
+        for (int i = 0; i < tasksCounter; i++)//running a loop to display all tasks
+        {
+            printf("\ttask %d :\n", i+1);
+            display(tasksListe[i]);
+        }
+    }
+}
+
 void modifyTask()//to modify a task
 {   
     int modifyChoice;// number to choose which task to modify
@@ -260,7 +277,7 @@ void modifyTask()//to modify a task
                                 || tasksListe[modifyChoice-1].priority > 4);
                         break;
 
-                        case 5 :
+                        case 5 ://updating status
                             do//dowhile loop to keep display incase taking invalid choice
                             {
                                 printf("Current status : ");//displaying current status with option menu
@@ -371,23 +388,6 @@ void deleteTask()//to delete a task
                 printf("--------------------------------------------\n");
             }
         } while (deleteChoice);
-    }
-}
-
-void displayAll()//to display all tasks
-{
-    if (tasksCounter == 0)//validating that there is tasks to display
-    {
-        printf("There is no tasks to display\n");
-        printf("--------------------------------------------\n");
-    }
-    else
-    {
-        for (int i = 0; i < tasksCounter; i++)//running a loop to display all tasks
-        {
-            printf("\ttask %d :\n", i+1);
-            display(tasksListe[i]);
-        }
     }
 }
 
@@ -555,6 +555,9 @@ int main()
 {   
     int menuChoice; //to take the choice of the user from the main menu
     int filterChoice;//to take the choice of the user from the filter menu
+    int statusChoice;//to take the choice of the user from the sort menu
+
+    printf("------------Welcome to OneHand--------------\n\n");
     do
     {
         printf("-----------------Main menu------------------\n");
@@ -563,8 +566,7 @@ int main()
         printf("\t3. Delete a task.\n");
         printf("\t4. Display tasks.\n");
         printf("\t5. Filter tasks.\n");
-        printf("\t6. Sorting tasks by date(ascending).\n");
-        printf("\t7. Sorting tasks by date(descending).\n");
+        printf("\t6. Sort tasks.\n");
         printf("\t0. Exit\n");
         scanf("%d", &menuChoice);
         printf("--------------------------------------------\n");
@@ -584,7 +586,7 @@ int main()
             break;
 
             case 4 ://displaying all tasks
-                displayAll();
+                displayTask();
             break;
 
             case 5 ://filtering tasks based on priority or status
@@ -596,13 +598,13 @@ int main()
                     printf("\t0. To go back.\n");
                     scanf("%d", &filterChoice);
 
-                    if (filterChoice == 1)
+                    if (filterChoice == 1)//filtering based on priority
                     {priorityFilter();}
 
-                    else if(filterChoice == 2)
+                    else if(filterChoice == 2)//filtering based on status
                     {statusFilter();}
 
-                    else
+                    else//error msg incase taking invalid choice
                     {
                         printf("--------------------------------------------\n");
                         printf("Invalid choice. Please select a valid option.\n");
@@ -611,12 +613,34 @@ int main()
                 } while (filterChoice);
             break;
 
-            case 6 ://sorting tasks based on ascending date
-                ascending();
-            break;
+            case 6 ://sorting tasks based on ascending and descending date
+                do
+                {
+                    printf("----------------Sort menu-------------------\n");
+                    printf("\t1. Sort by ascending date.\n");
+                    printf("\t2. Sort by descending date.\n");
+                    printf("\t0. To go back.\n");
+                    scanf("%d", &statusChoice);
 
-            case 7 ://sorting tasks based on descending date
-                descending();
+                    if (statusChoice == 1)//ascending sort and display
+                    {
+                        ascending();
+                        displayTask();
+                    }
+
+                    else if(statusChoice == 2)//descending sort and display
+                    {
+                        descending();
+                        displayTask();
+                    }
+
+                    else//error msg incase taking invalid choice
+                    {
+                        printf("--------------------------------------------\n");
+                        printf("Invalid choice. Please select a valid option.\n");
+                        printf("--------------------------------------------\n");
+                    }
+                } while (statusChoice);
             break;
 
             case 0 ://to exit the program
