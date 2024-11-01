@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+
 #define max_tasks 100 /// set max tasks to 100
 
 typedef struct // struct to store the date
@@ -94,6 +95,7 @@ void addTask()//to add a task
             printf("task number %d has been created successfully.\n", i+1);//confirming creation
             printf("--------------------------------------------\n");
         }
+
         tasksCounter = tasksCounter + x;//updating total of tasks
     }
 }
@@ -126,6 +128,7 @@ void display(task t)//to display one task only
 
     if (t.status == 1)
     {printf("Status : Incomplete.\n");}
+
     else
     {printf("Status : Complete.\n");}
     
@@ -191,6 +194,7 @@ void modifyTask()//to modify a task
                 printf("Invalid choice! Please select a valid option.\n");
                 printf("--------------------------------------------\n");
             }
+
             else
             {   
                 do//dowhile loop to keep displaying modification options
@@ -637,6 +641,7 @@ int main()
                     printf("There is no task to sort! \n");
                     printf("--------------------------------------------\n");
                 }
+
                 else
                 {
                     do
@@ -675,6 +680,7 @@ int main()
                         printf("There is no task to save! \n");
                         printf("--------------------------------------------\n");
                     }
+
                     else
                     {
                         saveFile();
